@@ -20,7 +20,6 @@
     E)J
     J)K
     K)L
-
             G - H       J - K - L
        /           /
 COM - B - C - D - E - F
@@ -31,7 +30,8 @@ COM - B - C - D - E - F
 import { codigosOrbitas } from "./codigosOrbitas";
 
 class Dia6 {
-  public prueba = [];
+  
+    // debe dar 42
   public ejemplo = [
     "COM)B",
     "B)C",
@@ -51,100 +51,59 @@ class Dia6 {
   public codOrbitas = codigosOrbitas.splice(0);
 
   public orbitas: number = 0;
+  public pasosHastaSanta: number = 0;
+
+  public objetos: any[] = [];
+  public satelites: any[] = [];
 
   constructor() {
-    // PRUEBAS
-    let satelitesSolo: string[] = [];
-    this.objetosSatelites = [];
 
-    let objetos: string[] = [];
-    let satelites: string[] = [];
-    let centroGalaxia: string;
-    this.ejemplo.map(orbitaD => {
+    this.objetosSatelites = [];
+    
+    this.codOrbitas.map(orbitaD => {
       let objetoSatelite = orbitaD.split(")");
 
       let objeto = objetoSatelite[0];
       let satelite = objetoSatelite[1];
 
       this.objetosSatelites.push([objeto, satelite]);
-      objetos.push(objeto);
-      satelites.push(satelite);
-      //console.log("%o satelite => %o", objeto, satelite);
+      this.objetos.push(objeto);
+      this.satelites.push(satelite);
+     
     });
 
-    /*
-    objetosSatelites.map(orb => {
-      satelitesSolo = objetosSatelites.filter(objSat => {
-        return objSat[1] === orb[0];
-      });
-    });
-    */
-
-    objetos.map(obj => {
-      let encontrado = satelites.find(sat => {
-        return sat === obj;
-      });
-      if (encontrado == undefined) {
-        centroGalaxia = obj;
-        console.log("Centro galaxia -> %o", obj);
-      }
-    });
-
-    // Satelites que no tienen mas satelites orbitandoles
-    satelites.map(sat => {
-      let encontrado = this.objetosSatelites.find(objSat => {
-        return objSat[0] === sat;
-      });
-      if (encontrado == undefined) {
-        satelitesSolo.push(sat);
-      }
-    });
-
-    // Cada sat solitario ir contando hasta el centro de la galaxia "COM"
+    // Cada sat ir contando hasta el centro de la galaxia "COM"
     // (mientras objSat[0] != "COM"), buscar el satelite
     // Un satelite SOLO PUEDE ORBITAR a UN planeta/satelite, logicamente
+   
+    this.satelites.map(sat => {
 
-    /*
-    satelitesSolo.map(sat => {
-        this.orbitas++;
-        objetosSatelites.map(objSat =>{
+      while (sat !== "COM") {
 
-            if(objSat[1] === sat){
-                this.orbitas++;
-                objetosSatelites.map( objSat2 => {
-
-                });
-            }
-        });
-        
-    });
-    */
-
-    // TODO revisar
-    satelitesSolo.map(sat => {
-      let planeta: string;
-      while (planeta != "COM") {
-        planeta = this.hastaElCentro(sat);
+        this.orbitas++;         
+        sat = this.hastaElCentro(sat);   
       }
     });
 
-    console.log("Satelites sin satelites -> %o", satelitesSolo);
+    console.log("Respuesta Ej1 -> %o", this.orbitas);
 
-    console.log(this.orbitas);
-
-    //console.log("satelites sin que les orbiten -> %o", satelitesSolo);
   }
 
-  public hastaElCentro(objeto): string {
-    //TODO aqui buscar donde planeta sea satelite en objetosSatelites y devolver el objeto
+  /**
+   * Devuelve el planeta/satelite al que orbita el que le llega por parametro
+   * Ej: A)B  -> le llega B por parametro, entonces busca ese entre los satelites y devuelve su planeta que es A
+   * @param sat 
+   */
+  public hastaElCentro(sat: string): string {
+    
     let encontrado = this.objetosSatelites.find(objSat => {
-      return objSat[1] === objeto;
+        if(objSat[1] === sat){
+            return objSat;
+        }
     });
-    if (encontrado) {
-      this.orbitas++;
-    }
-    return encontrado;
+    return encontrado[0];
   }
+
 }
 
 let ejercicio1 = new Dia6();
