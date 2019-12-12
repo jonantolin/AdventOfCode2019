@@ -37,158 +37,23 @@
  * Ejercicio 2
  *
  *  Se aporta nueva entrada inicial = 5
- * 4 nuevos codigos de instruccion
+ * 4 nuevos codigos de instruccion:
+ * 5: Si el primer parametro es distinto de 0, el puntero de instrucion toma el valor del segundo parametro
+ * 6: Si el primer parametro es igual a 0, el puntero de instrucion toma el valor del segundo parametro
+ * 7: Si el primer parametro es menor que el segundo escribe 1 en la posicion del tercer parametro, si no escribe 0
+ * 8: Si el primer parametro es igual que el segundo escribe 1 en la posicion del tercer parametro, si no escribe 0
  */
 
+import { AnalizadorIntCode } from "./analizadorIntCode";
 import { codigosEntrada, codigosPrueba } from "./codigosEntrada";
 
-class Dia5 {
-  // copia de los codigos proporcionados
-  public codigosCopia: number[] = codigosEntrada.slice(0);
-  //public codigosCopia: number[] = codigosPrueba.slice(0);
-
-  // Ej1
-  public ENTRADA_INICIAL: number = 5;
-  public entradaElegida = this.ENTRADA_INICIAL;
-
-  constructor() {
-    let contador: number = 0;
-
-    while (
-      contador < this.codigosCopia.length &&
-      this.codigosCopia[contador] != undefined
-    ) {
-      //console.log("contador -> %o", contador);
-      let instruccion = Math.abs(this.codigosCopia[contador]).toString();
-
-      // 01 ó 02 ó 03 ó 04 ...
-      let codInstruccion = instruccion.slice(-1);
-
-      let param1 = this.codigosCopia[contador + 1];
-      let param2 = this.codigosCopia[contador + 2];
-      let salida = this.codigosCopia[contador + 3];
-
-      let modo1 = 0;
-      let modo2 = 0;
-
-      modo1 = +instruccion.toString().slice(-3, -2);
-      modo2 = +instruccion.toString().slice(-4, -3);
-
-      let param1ConModo = this.segunModo(modo1, param1);
-      let param2ConModo = this.segunModo(modo2, param2);
-
-      if (instruccion.slice(-2) == "99") {
-        console.log("programa detenido");
-        break;
-      }
-
-      switch (codInstruccion) {
-        case "1":
-          this.instruccion1(param1ConModo, param2ConModo, salida);
-          contador += 4;
-          break;
-        case "2":
-          this.instruccion2(param1ConModo, param2ConModo, salida);
-          contador += 4;
-          break;
-        case "3":
-          this.instruccion3(this.entradaElegida, param1);
-          contador += 2;
-          break;
-        case "4":
-          this.instruccion4(param1);
-          contador += 2;
-          break;
-
-        case "5":
-          //console.log("cincooo");
-          contador = this.instruccion5(param1ConModo, param2ConModo, contador);
-          break;
-        case "6":
-          contador = this.instruccion6(param1ConModo, param2ConModo, contador);
-          break;
-
-        case "7":
-          console.log("sieete");
-          this.instruccion7(param1ConModo, param2ConModo, salida);
-          contador += 4;
-          break;
-
-        case "8":
-          console.log("ocho");
-          this.instruccion8(param1ConModo, param2ConModo, salida);
-          contador += 4;
-          break;
-        default:
-          //esto seria un error
-          contador += 9999;
-          break;
-      }
-
-      //contador++;
-    }
-    // TODO
+class Dia5 extends AnalizadorIntCode {
+  constructor(entradaInicial) {
+    super(entradaInicial, codigosEntrada);
   }
-
-  public segunModo = (modo, valor) => {
-    if (modo == 0) {
-      return this.codigosCopia[valor];
-    } else if (modo == 1) {
-      return valor;
-    }
-  };
-
-  public instruccion1 = (param1, param2, salida) => {
-    this.codigosCopia[salida] = param1 + param2;
-  };
-
-  public instruccion2 = (param1, param2, salida) => {
-    this.codigosCopia[salida] = param1 * param2;
-  };
-
-  public instruccion3 = (entradaElegida, param1) => {
-    this.codigosCopia[param1] = entradaElegida;
-  };
-
-  public instruccion4 = param1 => {
-    console.log("salida -> %o", this.codigosCopia[param1]);
-  };
-
-  // nuevas instrucciones Ej 2
-
-  public instruccion5 = (param1, param2, contador): number => {
-    let cont = contador;
-    //cont += 2;
-    if (param1 != 0) {
-      cont = this.codigosCopia.findIndex(elem => elem == param2);
-      //cont = this.codigosCopia[param2];
-    }
-    return cont;
-  };
-
-  public instruccion6 = (param1, param2, contador): number => {
-    contador += 2;
-    if (param1 == 0) {
-      contador = this.codigosCopia.findIndex(elem => elem == param2);
-    }
-    return contador;
-  };
-
-  public instruccion7 = (param1, param2, salida) => {
-    if (param1 < param2) {
-      this.codigosCopia[salida] = 1;
-    } else {
-      this.codigosCopia[salida] = 0;
-    }
-  };
-
-  public instruccion8 = (param1, param2, salida) => {
-    if (param1 == param2) {
-      this.codigosCopia[salida] = 1;
-    } else {
-      this.codigosCopia[salida] = 0;
-    }
-  };
 }
 
-let prueba1 = new Dia5();
+let entradaEj1: number = 1;
+let entradaEj2: number = 5;
+let Ejercicio1 = new Dia5(entradaEj1);
+let Ejercicio2 = new Dia5(entradaEj2);
