@@ -20,18 +20,25 @@
     E)J
     J)K
     K)L
+
             G - H       J - K - L
        /           /
 COM - B - C - D - E - F
                \
                 I
+
+  Ejercicio 2:
+
+  Calcular la los movimientos necesarios entre YOU y SAN.
+  En el ejemplo, YOU orbita a K, y SAN orbita a I.
+  De YOU a SAN hay 4 movimientos (sin incluir YOU y SAN)
  */
 
 import { codigosOrbitas } from "./codigosOrbitas";
+import { CalculadoresOrbitales } from "./calculadoresOrbitales";
 
-class Dia6 {
-  
-    // debe dar 42
+class Dia6 extends CalculadoresOrbitales {
+  public prueba = [];
   public ejemplo = [
     "COM)B",
     "B)C",
@@ -46,20 +53,32 @@ class Dia6 {
     "K)L"
   ];
 
-  public objetosSatelites: any[];
+  public ejemploEj2 = [
+    "COM)B",
+    "B)C",
+    "C)D",
+    "D)E",
+    "E)F",
+    "B)G",
+    "G)H",
+    "D)I",
+    "E)J",
+    "J)K",
+    "K)L",
+    "K)YOU",
+    "I)SAN"
+  ];
 
+  public objetosSatelites: Array<string>[];
   public codOrbitas = codigosOrbitas.splice(0);
-
   public orbitas: number = 0;
-  public pasosHastaSanta: number = 0;
-
-  public objetos: any[] = [];
-  public satelites: any[] = [];
+  public satelites: string[] = [];
+  public planetas: string[] = [];
 
   constructor() {
-
+    super();
     this.objetosSatelites = [];
-    
+
     this.codOrbitas.map(orbitaD => {
       let objetoSatelite = orbitaD.split(")");
 
@@ -67,43 +86,16 @@ class Dia6 {
       let satelite = objetoSatelite[1];
 
       this.objetosSatelites.push([objeto, satelite]);
-      this.objetos.push(objeto);
+      this.planetas.push(objeto);
       this.satelites.push(satelite);
-     
     });
 
-    // Cada sat ir contando hasta el centro de la galaxia "COM"
-    // (mientras objSat[0] != "COM"), buscar el satelite
-    // Un satelite SOLO PUEDE ORBITAR a UN planeta/satelite, logicamente
-   
-    this.satelites.map(sat => {
+    // Ejercicio 1
+    this.calcularOrbitas();
 
-      while (sat !== "COM") {
-
-        this.orbitas++;         
-        sat = this.hastaElCentro(sat);   
-      }
-    });
-
-    console.log("Respuesta Ej1 -> %o", this.orbitas);
-
+    // Ejercicio 2
+    this.yoHastaSanta();
   }
-
-  /**
-   * Devuelve el planeta/satelite al que orbita el que le llega por parametro
-   * Ej: A)B  -> le llega B por parametro, entonces busca ese entre los satelites y devuelve su planeta que es A
-   * @param sat 
-   */
-  public hastaElCentro(sat: string): string {
-    
-    let encontrado = this.objetosSatelites.find(objSat => {
-        if(objSat[1] === sat){
-            return objSat;
-        }
-    });
-    return encontrado[0];
-  }
-
 }
 
 let ejercicio1 = new Dia6();
