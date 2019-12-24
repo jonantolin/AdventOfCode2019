@@ -1,100 +1,48 @@
-import {codDigitos} from "./codigoDigitos";
+// Dia 8
 
-class Dia8{
+/**
+ * Debo descodificar una imagen a partir de un gigantesco codigo de digitos.
+ * Cada digito leido de izquierda a derecha y de abajo a arriba, representa un pixel.
+ * Cada imagen esta dividida en capas de identico tamaño que se rellenaran segun el tamaño de imagen.
+ * 
+ * Por ejemplo una imagen 3x2  si lo datos de imagen son: 123456789012 se rellenara así: 
+ * 
+ * Capa 1: 123
+           456
 
-    public copiaCodDigitos = codDigitos.slice(0);
+   Capa 2: 789
+           012
 
-    public arrayCapas: any[] = [];
-    public contadoresCerosCapas: number[] = [];
-
-    public arrayFilas: Array<number>[] = [];
+    Ejercicio 1: 
     
+    la imagen a descodificar tiene un tamaño de 25x6 . 
 
-    public tamanoFilas: number = 25;
-    public numFilas: number = 6;
-
-    constructor(){
-
-        this.arrayFilas = this.agruparEnFilas();
-        this.arrayCapas = this.agruparEnCapas(this.arrayFilas);
-        this.responderEj1();        
-
-    }
-
-    public agruparEnFilas = () => {
-
-        let fila: number[] = [];
-        let arrayFilas: Array<number>[] = [];
-
-        let contadoresCerosCapas: number[] = [];
-
-        this.copiaCodDigitos.map(digito => {
-
-            fila.push(digito);
-
-            if(fila.length === this.tamanoFilas){
-                arrayFilas.push(fila);
-                fila = [];
-            }
-
-            
-        });
-
-        return arrayFilas;
+    El objetivo del Ej 1 es encontrar la capa que tiene la MENOR cantidad de digitos '0',
+    y en esa capa hallar el numero de digitos '1' multiplicado por el numero de digitos '2' 
 
 
-    }
+    Ejercicio 2: 
 
-    public agruparEnCapas = (arrayFilas) => {
+    Formar la imagen generando una capa final, mezcla de todas las anteriores.
+    La capa de arriba es la primera del array de capas, y la de abajo del todo la última.
+    0: pixel negro
+    1: pixel blanco
+    2: pixel transparente
+ */
 
-        let capa: Array<number>[] = [];
-        let arrayCapas: any[] = [];
-        let cerosFilas = 0;
+import { CalculadoresCapas } from "./calculadoresCapas";
 
-        arrayFilas.map(fila =>{
+class Dia8 extends CalculadoresCapas {
+  constructor() {
+    super();
+    this.arrayFilas = this.agruparEnFilas();
+    this.arrayCapas = this.agruparEnCapas(this.arrayFilas);
+    //Ej 1
+    this.responderEj1();
 
-            let cerosPorFila = fila.filter( num => num === 0);
-            cerosFilas += cerosPorFila.length;
-            capa.push(fila);
-
-            if(capa.length === this.numFilas){
-                arrayCapas.push(capa);
-
-                this.contadoresCerosCapas.push(cerosFilas);
-                capa = [];
-                cerosFilas = 0;
-            }
-        });
-
-        return arrayCapas;
-    }
-
-    public responderEj1 = () => {
-
-        let numMenorCerosCapas = Math.min(...this.contadoresCerosCapas);
-
-        let capaConMenosCeros = this.arrayCapas[this.contadoresCerosCapas.indexOf(numMenorCerosCapas)]
-
-        let numeroUnos = 0;
-        let numeroDoses = 0;
-        capaConMenosCeros.map(fila => {
-            fila.map( num => {
-                if(num === 1){
-                    numeroUnos++;
-                }else if(num === 2){
-                    numeroDoses++;
-                }
-            });
-        });
-
-        console.log("Respuesta Ej1 -> %o", numeroUnos * numeroDoses);
-
-
-    }
-
-
-
-
+    //Ej 2
+    this.descodificarImagen();
+  }
 }
 
 let prueba = new Dia8();
